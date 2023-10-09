@@ -31,6 +31,11 @@ class WorkerThread(QThread):
     def __init__(self):
         super().__init__()
         
+    def create_folder(self):
+        os.mkdir(palautukset)
+        
+    def open_folder(self):
+        os.startfile(palautukset)
 
  
     def run(self):
@@ -182,7 +187,6 @@ class WorkerThread(QThread):
                         print("Tehtävän nimi sama kuin kansio. Jatketaan palautusta")
                         
                     #Aloita tehtävä
-                    print("aloita tehtävä")
                     browser.click_element("css:#assignment_show > div.assignment-title > div.assignment-buttons > button")
                     
                     #luodaan palautettavan tiedoston sijainti
@@ -193,27 +197,23 @@ class WorkerThread(QThread):
                         info = info.text.splitlines()
                     
                     info = info[0].split(" ")
-                    print(info)
                     #TODO: Tarkista onko tiedostotyyppi rajattu, jos on, voi suoraan lisätä tiedoston sivulle.
-                    if "pdf" in info:
-                        print("pdf merkintä")
+                    if "pdf" in info or "docx" in info:
                         #valitse tiedosto
-                        print("valitse tiedosto")
+                        print("Valitaan tiedosto...")
                         insertfile = browser.find_element("attachments[-1][uploaded_data]")
                         
                         #lähetetään tiedosto sivulle
                         insertfile.send_keys(filelocation)
                         print(f"Tiedoston {self.tiedostonimi} sijoitus ok")
                     else:
-                        print("ei pdf merkintää")
                     
                         #Lataa tiedosto
-                        print("lataa tiedosto")
                         browser.click_element("css:#submit_online_upload_form > table > tbody > tr:nth-child(2) > td > div:nth-child(2) > div > button:nth-child(1)")
                         self.check_alert() #tarkistetaan onko alertti olemassa
                         
                         #valitse tiedosto
-                        print("valitse tiedosto")
+                        print("Valitaan tiedosto...")
                         insertfile = browser.find_element("name:attachments[0][uploaded_data]")
                         
                         #lähetetään tiedosto sivulle
@@ -227,19 +227,22 @@ class WorkerThread(QThread):
                     
         if palautetut == 0:
             print("Ei palautettavia tehtäviä")
+        if palautetut != 0:
+            print(f"Palautettuja tehtäviä: {palautetut}")
                 
     
     def confirm_submission(self, tiedostonimi):
-        print(f"Lähetetäänkö tiedosto {tiedostonimi} (Lähetä)")
+        print(f"Lähetetäänkö tiedosto {tiedostonimi}")
         submit_button = browser.find_element("id:submit_file_button")
         window.mutex.lock()
         window.condition.wait(window.mutex)
         window.mutex.unlock()
         #print the return button element for testing purposes
-        print(submit_button)
+        print("Tehtävä palautettu")
+        
         os.rename(os.path.join(palautukset, self.kurssi, self.tehtava), os.path.join(palautukset, self.kurssi, "Palautettu " + self.tehtava))
         print(f"Kansion {self.kurssi} nimi muutettu")
-            #activate this line of code to actually submit assignments
+        #activate this line of code to actually submit assignments
         #browser.click_element(submit_button)
             
         
@@ -258,18 +261,19 @@ class window(QMainWindow):
     def __init__(self):
         super().__init__()
         loadUi("window.ui", self)
+        self.worker_thread = WorkerThread()
+        self.custom_stream = CustomStream()
         
         self.stop_button.clicked.connect(self.close_application)
         self.start_button.clicked.connect(self.start_robot)
-        
         self.send_button.clicked.connect(self.on_send_button_clicked)
+        self.open_folder_button.clicked.connect(self.worker_thread.open_folder)
          
-        self.worker_thread = WorkerThread()
+        self.create_folder_button.clicked.connect(self.worker_thread.create_folder)
         
         self.worker_thread.finished.connect(self.work_finished)
         self.worker_thread.signal.connect(self.activate_send_button)
         
-        self.custom_stream = CustomStream()
         
         #Tällä saadaan tekstikenttä tulostamaan sys.stdout aka print
         self.custom_stream.append_text.connect(self.terminal.insertPlainText)

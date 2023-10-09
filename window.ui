@@ -2,51 +2,88 @@
 <ui version="4.0">
  <class>MainWindow</class>
  <widget class="QMainWindow" name="MainWindow">
+  <property name="windowModality">
+   <enum>Qt::NonModal</enum>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>654</width>
-    <height>414</height>
+    <width>909</width>
+    <height>546</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Canvas_Bot</string>
+   <string>Canvas Project</string>
+  </property>
+  <property name="windowIcon">
+   <iconset theme="black">
+    <normaloff>../../Downloads/canvaslogoicon_zqu_icon.ico</normaloff>../../Downloads/canvaslogoicon_zqu_icon.ico</iconset>
+  </property>
+  <property name="windowOpacity">
+   <double>1.000000000000000</double>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">
+background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 rgba(99,33,191, 1), stop: 0.45 rgba(13,13,13, 1), stop: 1 rgba(13,13,13, 1));
+</string>
+  </property>
+  <property name="iconSize">
+   <size>
+    <width>24</width>
+    <height>24</height>
+   </size>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QPushButton" name="start_button">
     <property name="geometry">
      <rect>
-      <x>410</x>
-      <y>340</y>
-      <width>221</width>
+      <x>420</x>
+      <y>480</y>
+      <width>181</width>
       <height>51</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+	border: 2px solid rgb(195, 195, 195);
+	border-radius: 10px;	
+	color:rgb(255,255,255);
+	background-color: rgb(45,45,45);
+	font-size:11pt;
+}
+QPushButton:hover {
+	border: 2px solid rgb(195, 195, 195);
+	background-color: rgb(55,55,55);
+}
+QPushButton:pressed {	
+	border: 2px solid rgb(230, 230, 230);
+	background-color: rgb(60,60,60);
+}
+
+QPushButton:disabled {	
+	border-radius: 10px;	
+	border: 2px solid rgb(66, 66, 66);
+	background-color:rgb(115,115,115);
+	color:rgb(255,255,255);
+	font: 8pt &quot;MS Shell Dlg 2&quot;;
+	text-decoration: line-through;
+	font-size:11pt;
+
+
+}</string>
     </property>
     <property name="text">
      <string>Käynnistä</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="stop_button">
-    <property name="geometry">
-     <rect>
-      <x>170</x>
-      <y>340</y>
-      <width>221</width>
-      <height>51</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Sammuta</string>
-    </property>
-   </widget>
    <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>20</y>
-      <width>601</width>
-      <height>301</height>
+      <x>10</x>
+      <y>10</y>
+      <width>591</width>
+      <height>451</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
@@ -54,6 +91,15 @@
       <widget class="QTextEdit" name="terminal">
        <property name="contextMenuPolicy">
         <enum>Qt::ActionsContextMenu</enum>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(38, 38, 38);
+border-radius: 30px;
+border-color:rgb(166, 166, 166);
+border-width: 3px;
+border-style:solid;
+color:white;
+padding:10px;</string>
        </property>
        <property name="readOnly">
         <bool>false</bool>
@@ -78,18 +124,204 @@ p, li { white-space: pre-wrap; }
     </property>
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>340</y>
-      <width>151</width>
+      <x>260</x>
+      <y>480</y>
+      <width>141</width>
       <height>51</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">
+QPushButton {
+	border: 2px solid rgb(195, 195, 195);
+	border-radius: 10px;	
+	color:rgb(255,255,255);
+	background-color: rgb(45,45,45);
+	font-size:11pt;
+}
+QPushButton:hover {
+	border: 2px solid rgb(195, 195, 195);
+	background-color: rgb(55,55,55);
+}
+QPushButton:pressed {	
+	border: 2px solid rgb(230, 230, 230);
+	background-color: rgb(60,60,60);
+}
+
+QPushButton:disabled {	
+	border-radius: 10px;	
+	border: 2px solid rgb(66, 66, 66);
+	background-color:rgb(115,115,115);
+	color:rgb(255,255,255);
+	font: 8pt &quot;MS Shell Dlg 2&quot;;
+	text-decoration: line-through;
+	font-size:11pt;
+	
+
+}</string>
     </property>
     <property name="text">
      <string>Lähetä</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="stop_button">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>480</y>
+      <width>121</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+	border: 2px solid rgb(195, 195, 195);
+	border-radius: 10px;	
+	color:rgb(255,255,255);
+	background-color: rgb(45,45,45);
+	font-size:11pt;
+}
+QPushButton:hover {
+	border: 2px solid rgb(195, 195, 195);
+	background-color: rgb(55,55,55);
+}
+QPushButton:pressed {	
+	border: 2px solid rgb(230, 230, 230);
+	background-color: rgb(60,60,60);
+}
+
+QPushButton:disabled {	
+	border-radius: 10px;	
+	border: 2px solid rgb(66, 66, 66);
+	background-color:rgb(115,115,115);
+	color:rgb(255,255,255);
+	font: 8pt &quot;MS Shell Dlg 2&quot;;
+	text-decoration: line-through;
+	font-size:11pt;
+
+
+}</string>
+    </property>
+    <property name="text">
+     <string>Sammuta</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="create_folder_button">
+    <property name="geometry">
+     <rect>
+      <x>650</x>
+      <y>20</y>
+      <width>201</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+	border: 2px solid rgb(195, 195, 195);
+	border-radius: 10px;	
+	color:rgb(255,255,255);
+	background-color: rgb(45,45,45);
+	font-size:11pt;
+}
+QPushButton:hover {
+	border: 2px solid rgb(195, 195, 195);
+	background-color: rgb(55,55,55);
+}
+QPushButton:pressed {	
+	border: 2px solid rgb(230, 230, 230);
+	background-color: rgb(60,60,60);
+}
+
+QPushButton:disabled {	
+	border-radius: 10px;	
+	border: 2px solid rgb(66, 66, 66);
+	background-color:rgb(115,115,115);
+	color:rgb(255,255,255);
+	font: 8pt &quot;MS Shell Dlg 2&quot;;
+	text-decoration: line-through;
+	font-size:11pt;
+
+
+}</string>
+    </property>
+    <property name="text">
+     <string>Luo Kurssienpalautuskansio</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="open_folder_button">
+    <property name="geometry">
+     <rect>
+      <x>650</x>
+      <y>100</y>
+      <width>201</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+	border: 2px solid rgb(195, 195, 195);
+	border-radius: 10px;	
+	color:rgb(255,255,255);
+	background-color: rgb(45,45,45);
+	font-size:11pt;
+}
+QPushButton:hover {
+	border: 2px solid rgb(195, 195, 195);
+	background-color: rgb(55,55,55);
+}
+QPushButton:pressed {	
+	border: 2px solid rgb(230, 230, 230);
+	background-color: rgb(60,60,60);
+}
+
+QPushButton:disabled {	
+	border-radius: 10px;	
+	border: 2px solid rgb(66, 66, 66);
+	background-color:rgb(115,115,115);
+	color:rgb(255,255,255);
+	font: 8pt &quot;MS Shell Dlg 2&quot;;
+	text-decoration: line-through;
+	font-size:11pt;
+
+
+}</string>
+    </property>
+    <property name="text">
+     <string>Avaa Kurssienpalautuskansio</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>640</x>
+      <y>180</y>
+      <width>251</width>
+      <height>161</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap resource="assets.qrc">C:\Users\kauti\Documents\Canvas_Botti\canvasproject_small.png</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>false</bool>
+    </property>
+    <property name="indent">
+     <number>0</number>
+    </property>
+   </widget>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="assets.qrc"/>
+ </resources>
  <connections/>
 </ui>
