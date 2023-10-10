@@ -10,8 +10,9 @@ import time
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5.QtCore import QThread, pyqtSignal, QWaitCondition, QMutex, QObject
 from PyQt5.uic import loadUi
-import sys
+from PyQt5.QtGui import QPixmap, QIcon
 
+import sys
 
 browser = Selenium()
 
@@ -261,11 +262,15 @@ class window(QMainWindow):
     condition = QWaitCondition()
     mutex = QMutex()
 
+
     def __init__(self):
         super().__init__()
         loadUi("window.ui", self)
         self.worker_thread = WorkerThread()
         self.custom_stream = CustomStream()
+        self.pixmap = QPixmap("canvasproject_small.png")
+        self.setWindowIcon(QIcon("canvascircle_g0O_icon.ico"))
+
         
         self.stop_button.clicked.connect(self.close_application)
         self.start_button.clicked.connect(self.start_robot)
@@ -281,6 +286,9 @@ class window(QMainWindow):
         #Tällä saadaan tekstikenttä tulostamaan sys.stdout aka print
         self.custom_stream.append_text.connect(self.terminal.insertPlainText)
         sys.stdout = self.custom_stream
+        
+        self.logo.setPixmap(self.pixmap)
+
 
         
         
@@ -344,6 +352,6 @@ if __name__ == "__main__":
     
     #TODO:
     # DONE 1. Tarkista onko tiedosto jo palautettu 
-    # 2. Palautettavan tiedoston eri tiedostotyypit saattavat
+    # DONE 2. Palautettavan tiedoston eri tiedostotyypit saattavat
     # vaikuttaa valitse tiedosto napin saatavuuteen siksi olisi hyvä
     # lisätä tarkistus jotta voidaan toimia tiedostotyypin mukaan.
