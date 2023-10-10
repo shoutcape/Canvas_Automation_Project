@@ -34,7 +34,7 @@ class WorkerThread(QThread):
         
     def create_folder(self):
         if os.path.exists(palautukset):
-            print("Palautuskansio on jo olemassa)
+            print("Palautuskansio on jo olemassa")
         else:
             os.mkdir(palautukset)
             print("palautuskansio luotu")
