@@ -7,12 +7,19 @@ import time
 
 
 #UI kirjastot
-from PyQt5.QtWidgets import QApplication, QMainWindow
+from PyQt5.QtWidgets import QApplication, QMainWindow  
 from PyQt5.QtCore import QThread, pyqtSignal, QWaitCondition, QMutex, QObject
 from PyQt5.uic import loadUi
 from PyQt5.QtGui import QPixmap, QIcon
 
+import json
 import sys
+
+from cryptography.fernet import Fernet
+
+key = Fernet.generate_key()
+cipher = Fernet(key)
+import base64
 
 browser = Selenium()
 
@@ -49,20 +56,16 @@ class WorkerThread(QThread):
     def run(self):
 
         try:
-            #original_stdout = sys.stdout
-            #sys.stdout = CustomStream(self.terminal)
-            
-
-
-            
+           
+           
             self.open_site()
             self.login()
             self.get_courses()
             self.get_assignment_folders()
             self.check_and_return_submissions()
-            #sys.stdout = original_stdout
+            
         except:
-            print("Tehtävän palautus epäonnistui, varmista palautuksen saatavuus")
+            print("Tehtävän palautus epäonnistui. Muistithan luoda tunnukset?")
         finally:
             self.close_all_browsers()
             self.finished.emit()
@@ -94,10 +97,15 @@ class WorkerThread(QThread):
         credentials = secrets.get_secret("credentials")
         username = credentials["username"]
         password = credentials["password"]
-        
+
+        decoded_encrypted_password = base64.b64decode(password.encode())
+        decrypted_password = cipher.decrypt(decoded_encrypted_password).decode()
+
+
         browser.input_text("id:userNameInput", username)
-        browser.input_text("id:passwordInput", password)
+        browser.input_text("id:passwordInput", decrypted_password)
         browser.submit_form()
+        
                 
     def get_courses(self):
         browser.click_element("id:global_nav_courses_link")
@@ -272,14 +280,23 @@ class window(QMainWindow):
         loadUi("window.ui", self)
         self.worker_thread = WorkerThread()
         self.custom_stream = CustomStream()
+        self.popup_window = popupwindow()
         self.pixmap = QPixmap("canvasproject_small.png")
         self.setWindowIcon(QIcon("canvascircle_g0O_icon.ico"))
+        
+        
+        
+        scrollbar = self.terminal.verticalScrollBar()
+        scrollbar.rangeChanged.connect(lambda: scrollbar.setValue(scrollbar.maximum()))
 
         
         self.stop_button.clicked.connect(self.close_application)
         self.start_button.clicked.connect(self.start_robot)
         self.send_button.clicked.connect(self.on_send_button_clicked)
         self.open_folder_button.clicked.connect(self.worker_thread.open_folder)
+        
+        #Avaa popup ikkuna jossa voi syöttää käyttäjätunnukset
+        self.create_credentials_button.clicked.connect(self.popup_window.show)
          
         self.create_folder_button.clicked.connect(self.worker_thread.create_folder)
         
@@ -292,6 +309,7 @@ class window(QMainWindow):
         sys.stdout = self.custom_stream
         
         self.logo.setPixmap(self.pixmap)
+        
 
 
         
@@ -332,14 +350,36 @@ class CustomStream(QObject):
     
     def write(self, text):
         self.append_text.emit(text)
-        
+
     def flush(self):
        # Tämä on tarpeen, jotta CustomStream noudattaa sys.stdout -liittymää
        pass
 
+class popupwindow(QMainWindow):
     
-            
-
+    def __init__(self):
+        super().__init__()
+        loadUi("signinpopup.ui", self)
+        
+        self.login_button.clicked.connect(self.save_credentials)
+        
+        
+    def save_credentials(self):
+        #Tallennetaan käyttäjätunnukset vault.json tiedostoon
+        username = self.username.text()
+        password = self.password.text()
+        
+        #salataan salasana, jotta talletus on turvallisempaa.
+        encrypted_password = cipher.encrypt(password.encode())
+        encoded_password = base64.urlsafe_b64encode(encrypted_password).decode()
+        secret = {"credentials": {"username": username, "password": encoded_password}}
+        secrets = os.path.join(home_directory, "vault.json")            
+        with open(secrets, "w") as file:
+            json.dump(secret, file)
+        print("Tunnukset tallennettu")
+        
+        self.close()
+        
 
 def main():
     try:
