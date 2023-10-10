@@ -61,8 +61,8 @@ class WorkerThread(QThread):
             self.get_assignment_folders()
             self.check_and_return_submissions()
             #sys.stdout = original_stdout
-        #except:
-            #print("Tehtävän palautus epäonnistui, varmista palautuksen saatavuus")
+        except:
+            print("Tehtävän palautus epäonnistui, varmista palautuksen saatavuus")
         finally:
             self.close_all_browsers()
             self.finished.emit()
