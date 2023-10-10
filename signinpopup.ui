@@ -9,17 +9,17 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>373</width>
+    <width>393</width>
     <height>183</height>
    </rect>
   </property>
   <property name="sizePolicy">
-   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+   <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
     <horstretch>1</horstretch>
     <verstretch>1</verstretch>
    </sizepolicy>
   </property>
-  <property name="maximumSize">
+  <property name="minimumSize">
    <size>
     <width>373</width>
     <height>183</height>
@@ -78,7 +78,7 @@ background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 rgba(50,13,13, 1
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>-20</x>
+      <x>0</x>
       <y>50</y>
       <width>101</width>
       <height>31</height>
@@ -101,7 +101,7 @@ background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 rgba(50,13,13, 1
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
-      <x>-20</x>
+      <x>0</x>
       <y>90</y>
       <width>101</width>
       <height>31</height>
@@ -147,7 +147,7 @@ background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 rgba(50,13,13, 1
    <widget class="QPushButton" name="login_button">
     <property name="geometry">
      <rect>
-      <x>210</x>
+      <x>230</x>
       <y>130</y>
       <width>141</width>
       <height>31</height>
@@ -189,7 +189,7 @@ QPushButton:disabled {
    <widget class="QLineEdit" name="username">
     <property name="geometry">
      <rect>
-      <x>90</x>
+      <x>110</x>
       <y>50</y>
       <width>261</width>
       <height>31</height>
@@ -210,7 +210,7 @@ QPushButton:disabled {
    <widget class="QLineEdit" name="password">
     <property name="geometry">
      <rect>
-      <x>90</x>
+      <x>110</x>
       <y>90</y>
       <width>261</width>
       <height>31</height>
