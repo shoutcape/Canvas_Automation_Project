@@ -37,6 +37,7 @@ class WorkerThread(QThread):
             print("Palautuskansio on jo olemassa)
         else:
             os.mkdir(palautukset)
+            print("palautuskansio luotu")
         
     def open_folder(self):
         try:
