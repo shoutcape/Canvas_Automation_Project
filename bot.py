@@ -35,7 +35,10 @@ class WorkerThread(QThread):
         os.mkdir(palautukset)
         
     def open_folder(self):
-        os.startfile(palautukset)
+        try:
+            os.startfile(palautukset)
+        except: 
+            print("Kansiota ei löydy")
 
  
     def run(self):

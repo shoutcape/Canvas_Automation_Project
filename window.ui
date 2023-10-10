@@ -309,7 +309,7 @@ QPushButton:disabled {
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap resource="assets.qrc">C:\Users\kauti\Documents\Canvas_Botti\canvasproject_small.png</pixmap>
+     <pixmap resource="assets.qrc">:/images/canvasproject_small.png</pixmap>
     </property>
     <property name="scaledContents">
      <bool>false</bool>
