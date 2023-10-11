@@ -17,9 +17,10 @@ import sys
 
 from cryptography.fernet import Fernet
 
-key = Fernet.generate_key()
-cipher = Fernet(key)
 import base64
+
+key = "TwZbJ1e0IFCwtGY5wtb1N7vk3bprK2s5mVVvOinqX3M="
+cipher = Fernet(key)
 
 browser = Selenium()
 
@@ -32,7 +33,31 @@ palautukset = os.path.join(desktop_directory, 'Kurssienpalautukset')
 
 url = "https://tunnistus.laurea.fi/adfs/ls/?SAMLRequest=fZLNbsIwEITvfYrI95AQgiAWiURBVZFoi4D20EvlGAOWnDX1rvvz9jWBqvTC0eud%2FXbGHqFozIGPPe1hqd69Qoq%2BGgPI24uSeQfcCtTIQTQKOUm%2BGj%2FMedZJ%2BcFZstIadiG5rhCIypG2wKLZtGRvslvnuRpu4sG2TuM8K%2FqxGPYGsay7%2FWGa50VdFCx6UQ6DpmRhRBAiejUDJAEUSmnWi9MizgbrdMizjOeDVxZNgw8NglrVnuiAPEnIA2gkjx0jvFOis9WJ2GwxMZiwaPy72sQC%2Bka5lXIfWqrn5fxvhBTwIS71xu40JEfjLFqc47jVsNGwu55EfWpCfr9eL%2BLF02rNqtFxDm%2F9ueqIDMQzSge%2FzksKh460TUvMRsmlYHR6yseAmk0X1mj5Hd1Z1wi6vsmxojfxtm3l5ASgVkAhEWPs5yTQSZUs0BVLqhPy%2F4epbn4A&SigAlg=http%3A%2F%2Fwww.w3.org%2F2001%2F04%2Fxmldsig-more%23rsa-sha256&Signature=xqm9r%2FSVmDb3nxNYYDuJapmDE%2BLzzcu5FYVui%2BQuq3063kIlXDlv8hBVrudJut1xxyjgr14tTRGCj%2FDevnxhDdHUkvI6HsiYvXi9AKahnYNzfouV8vh58EzGDs0E9mocKYA225OFp7kbZAA%2FM4tnwdLYIXGp6HzHgR3MylXvKBpwqecXCov%2Fv1zjQppFbNoGjYGcEtWrOveGAxAkJc4AnWfU5U0yCYAVL6v1surv9GK8hGnzY%2FBoEoYvxGy2q1HlbJC63mCN1hHa6X2XXAdUlP40tASz10cthjHQLZ07r2vpJJl4DEabUildrWpjSmFLks2uobgS%2F5KjBKw%2FNBv3jQ%3D%3D"
 
-    
+
+
+
+def resource_path(relative_path):
+    """Get the absolute path for a resource in a PyInstaller-packaged application."""
+    if getattr(sys, 'frozen', False):
+        # The application is frozen (packaged)
+        base_path = sys._MEIPASS
+    else:
+        # The application is running from the Python interpreter (not packaged)
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
+
+# Use the function to get the path to your file
+ui_path = resource_path("contents/window.ui")
+popupui_path = resource_path("contents/signinpopup.ui")
+circle_logo_path = resource_path("contents/canvascircle_g0O_icon.ico")
+canvas_project_path = resource_path("contents/canvasproject_small.png")
+vault_path = resource_path("contents/vault.json")
+
+
+
+
+
 class WorkerThread(QThread):
     finished = pyqtSignal()
     signal = pyqtSignal()
@@ -93,7 +118,7 @@ class WorkerThread(QThread):
     
     def login(self):
         #Aseta käyttäjätunnus ja salasana vault.json tiedostoon. user hakemistoon
-        secrets = FileSecrets(os.path.join(home_directory, "vault.json"))
+        secrets = FileSecrets(vault_path)
         credentials = secrets.get_secret("credentials")
         username = credentials["username"]
         password = credentials["password"]
@@ -277,12 +302,12 @@ class window(QMainWindow):
 
     def __init__(self):
         super().__init__()
-        loadUi("window.ui", self)
+        loadUi(ui_path, self)
         self.worker_thread = WorkerThread()
         self.custom_stream = CustomStream()
         self.popup_window = popupwindow()
-        self.pixmap = QPixmap("canvasproject_small.png")
-        self.setWindowIcon(QIcon("canvascircle_g0O_icon.ico"))
+        self.pixmap = QPixmap(canvas_project_path)
+        self.setWindowIcon(QIcon(circle_logo_path))
         
         
         
@@ -359,8 +384,9 @@ class popupwindow(QMainWindow):
     
     def __init__(self):
         super().__init__()
-        loadUi("signinpopup.ui", self)
-        
+        loadUi(popupui_path, self)
+        self.setWindowIcon(QIcon(circle_logo_path))
+
         self.login_button.clicked.connect(self.save_credentials)
         
         
@@ -373,8 +399,7 @@ class popupwindow(QMainWindow):
         encrypted_password = cipher.encrypt(password.encode())
         encoded_password = base64.urlsafe_b64encode(encrypted_password).decode()
         secret = {"credentials": {"username": username, "password": encoded_password}}
-        secrets = os.path.join(home_directory, "vault.json")            
-        with open(secrets, "w") as file:
+        with open(vault_path, "w") as file:
             json.dump(secret, file)
         print("Tunnukset tallennettu")
         
