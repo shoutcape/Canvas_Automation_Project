@@ -2,4 +2,4 @@
  Canvas assignment automation project
 
 
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/shoutcape/Canvas_Automation_Project?label=latest%20release)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/Shoutcape/Canvas_Automation_Project?label=latest%20release)
