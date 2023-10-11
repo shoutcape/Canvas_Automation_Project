@@ -1,5 +1,6 @@
 # Canvas_Botti
- Canvas assignment automation project
+Canvas assignment automation project
+ 
 To install the app go to releases
 
 
