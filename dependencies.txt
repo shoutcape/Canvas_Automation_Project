@@ -1,0 +1,5 @@
+pip install these packages if you haven't already
+
+rpaframework
+PyQt5
+cryptography
