@@ -19,7 +19,7 @@ from cryptography.fernet import Fernet
 
 import base64
 
-key = "TwZbJ1e0IFCwtGY5wtb1N7vk3bprK2s5mVVvOinqX3M="
+key = Fernet.generate_key()
 cipher = Fernet(key)
 
 browser = Selenium()
@@ -126,8 +126,10 @@ class WorkerThread(QThread):
         decoded_encrypted_password = base64.b64decode(password.encode())
         decrypted_password = cipher.decrypt(decoded_encrypted_password).decode()
 
+        decoded_encrypted_username = base64.b64decode(username.encode())
+        decrypted_username = cipher.decrypt(decoded_encrypted_username).decode()
 
-        browser.input_text("id:userNameInput", username)
+        browser.input_text("id:userNameInput", decrypted_username)
         browser.input_text("id:passwordInput", decrypted_password)
         browser.submit_form()
         
@@ -398,7 +400,11 @@ class popupwindow(QMainWindow):
         #salataan salasana, jotta talletus on turvallisempaa.
         encrypted_password = cipher.encrypt(password.encode())
         encoded_password = base64.urlsafe_b64encode(encrypted_password).decode()
-        secret = {"credentials": {"username": username, "password": encoded_password}}
+        
+        encrypted_username = cipher.encrypt(username.encode())
+        encoded_username = base64.urlsafe_b64encode(encrypted_username).decode()
+        
+        secret = {"credentials": {"username": encoded_username, "password": encoded_password}}
         with open(vault_path, "w") as file:
             json.dump(secret, file)
         print("Tunnukset tallennettu")
