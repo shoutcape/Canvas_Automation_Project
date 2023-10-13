@@ -354,10 +354,7 @@ class window(QMainWindow):
         self.start_button.setEnabled(False)
         self.start_button.setText("Käynnissä")
         self.worker_thread.start()
-        
-    def confirm_submission(self):
-        self.confirm_submission.emit("kyllä")
-            
+              
         
     def work_finished(self):
         self.start_button.setEnabled(True)
