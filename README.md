@@ -4,12 +4,11 @@ This project was made as a part of Laurea's rpa course. It allows you to return 
 
 The program automatically goes through available courses and assignments and then creates corresponding directories for each course and assignments to the desktop.
  
-To install the app go to releases
+
+
 
 
 If the webdownload fails try a different browser.
-
-
 
 
 
