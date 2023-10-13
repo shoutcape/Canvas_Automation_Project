@@ -19,7 +19,9 @@ from cryptography.fernet import Fernet
 
 import base64
 
-key = Fernet.generate_key()
+key = "-_4BQgzg1Z3eWipRRo0tpj4KuXWmqNJ7qSyNNYuhHVc="
+
+
 cipher = Fernet(key)
 
 browser = Selenium()
@@ -35,7 +37,7 @@ url = "https://tunnistus.laurea.fi/adfs/ls/?SAMLRequest=fZLNbsIwEITvfYrI95AQgiAW
 
 
 
-
+#https://stackoverflow.com/questions/7674790/bundling-data-files-with-pyinstaller-onefile
 def resource_path(relative_path):
     """Get the absolute path for a resource in a PyInstaller-packaged application."""
     if getattr(sys, 'frozen', False):
@@ -60,7 +62,7 @@ vault_path = resource_path("contents/vault.json")
 
 class WorkerThread(QThread):
     finished = pyqtSignal()
-    signal = pyqtSignal()
+    pause_signal = pyqtSignal()
     def __init__(self):
         super().__init__()
         
@@ -75,7 +77,7 @@ class WorkerThread(QThread):
         try:
             os.startfile(palautukset)
         except: 
-            print("Kansiota ei löydy")
+            print("Kansiota ei löydy, luo kansio")
 
  
     def run(self):
@@ -240,7 +242,7 @@ class WorkerThread(QThread):
                         info = info.text.splitlines()
                     
                     info = info[0].split(" ")
-                    #TODO: Tarkista onko tiedostotyyppi rajattu, jos on, voi suoraan lisätä tiedoston sivulle.
+                    #Tarkista onko tiedostotyyppi rajattu, jos on, voi suoraan lisätä tiedoston sivulle.
                     if "pdf" in info or "docx" in info:
                         #valitse tiedosto
                         print("Valitaan tiedosto...")
@@ -264,9 +266,8 @@ class WorkerThread(QThread):
                         print(f"Tiedoston {self.tiedostonimi} sijoitus ok")
                     
                     #TEHTÄVÄN PALAUTUS
-                    self.signal.emit()
+                    self.pause_signal.emit()
                     self.confirm_submission(self.tiedostonimi)
-                    time.sleep(2)
                     
         if palautetut == 0:
             print("Ei palautettavia tehtäviä")
@@ -280,13 +281,14 @@ class WorkerThread(QThread):
         window.mutex.lock()
         window.condition.wait(window.mutex)
         window.mutex.unlock()
-        #print the return button element for testing purposes
+
+#Aktivoi tämä osa kun haluat palauttaa tehtävän
+        browser.click_element(submit_button)
+        time.sleep(2)
         print("Tehtävä palautettu")
         
         os.rename(os.path.join(palautukset, self.kurssi, self.tehtava), os.path.join(palautukset, self.kurssi, "Palautettu " + self.tehtava))
         print(f"Kansion {self.kurssi} nimi muutettu")
-        #activate this line of code to actually submit assignments
-        #browser.click_element(submit_button)
             
         
     def close_all_browsers(self):
@@ -328,7 +330,7 @@ class window(QMainWindow):
         self.create_folder_button.clicked.connect(self.worker_thread.create_folder)
         
         self.worker_thread.finished.connect(self.work_finished)
-        self.worker_thread.signal.connect(self.activate_send_button)
+        self.worker_thread.pause_signal.connect(self.activate_send_button)
         
         
         #Tällä saadaan tekstikenttä tulostamaan sys.stdout aka print
@@ -355,8 +357,6 @@ class window(QMainWindow):
         self.start_button.setText("Käynnissä")
         self.worker_thread.start()
         
-    def confirm_submission(self):
-        self.confirm_submission.emit("kyllä")
             
         
     def work_finished(self):
@@ -378,8 +378,9 @@ class CustomStream(QObject):
     def write(self, text):
         self.append_text.emit(text)
 
+
+#Tämä luokka vaatii että myös flush metodi on olemassa
     def flush(self):
-       # Tämä on tarpeen, jotta CustomStream noudattaa sys.stdout -liittymää
        pass
 
 class popupwindow(QMainWindow):
@@ -423,10 +424,3 @@ def main():
     
 if __name__ == "__main__":
     main()
-    
-    
-    #TODO:
-    # DONE 1. Tarkista onko tiedosto jo palautettu 
-    # DONE 2. Palautettavan tiedoston eri tiedostotyypit saattavat
-    # vaikuttaa valitse tiedosto napin saatavuuteen siksi olisi hyvä
-    # lisätä tarkistus jotta voidaan toimia tiedostotyypin mukaan.
