@@ -1,4 +1,4 @@
-# Cancas Automation Project
+# Canvas Automation Project
 
 This project was made as a part of Laurea's rpa course. It allows you to return multiple assignments with ease and automatically once you run the program.
 
