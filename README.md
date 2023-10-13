@@ -10,7 +10,18 @@ To install the app go to releases
 If the webdownload fails try a different browser.
 
 
-https://github.com/shoutcape/Canvas_Automation_Project/releases/tag/v1.0
 
 
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/Shoutcape/Canvas_Automation_Project?label=latest%20release)
+
+### Normal version
+
+Returns assignments
+
+[Install here ![GitHub release (latest by date)](https://img.shields.io/github/v/release/Shoutcape/Canvas_Automation_Project?label=latest%20release) ](https://github.com/shoutcape/Canvas_Automation_Project/releases/tag/v1.1)
+
+
+### DEMO version
+
+Doesn't return assignments
+
+[Install here](https://github.com/shoutcape/Canvas_Automation_Project/releases/tag/v1.0)
