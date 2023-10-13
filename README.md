@@ -1,5 +1,8 @@
-# Canvas_Botti
-Canvas assignment automation project
+# Cancas Automation Project
+
+This project was made as a part of Laurea's rpa course. It allows you to return multiple assignments with ease and automatically once you run the program.
+
+The program automatically goes through available courses and assignments and then creates corresponding directories on the desktop.
  
 To install the app go to releases
 
