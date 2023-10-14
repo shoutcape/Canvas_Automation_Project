@@ -93,9 +93,9 @@ class WorkerThread(QThread):
             
         except:
             print("Tehtävän palautus epäonnistui. Muistithan luoda tunnukset?")
-        finally:
-            self.close_all_browsers()
-            self.finished.emit()
+            browser.close_all_browsers()
+            
+        self.finished.emit()
         
     
     def open_site(self):
@@ -130,7 +130,6 @@ class WorkerThread(QThread):
 
         decoded_encrypted_username = base64.b64decode(username.encode())
         decrypted_username = cipher.decrypt(decoded_encrypted_username).decode()
-
         browser.input_text("id:userNameInput", decrypted_username)
         browser.input_text("id:passwordInput", decrypted_password)
         browser.submit_form()
@@ -239,11 +238,12 @@ class WorkerThread(QThread):
                     
                     assignment_information = browser.get_webelements("css:#assignment_show > ul")
                     for info in assignment_information:
-                        info = info.text.splitlines()
+                        info = info.text.lower().splitlines()
                     
+                    filetypes =  ['doc', 'docx', 'pdf','doc,', 'docx,', 'pdf,', 'ppt,', 'pptx']
                     info = info[0].split(" ")
                     #Tarkista onko tiedostotyyppi rajattu, jos on, voi suoraan lisätä tiedoston sivulle.
-                    if "pdf" in info or "docx" in info:
+                    if any(filetype in info for filetype in filetypes):
                         #valitse tiedosto
                         print("Valitaan tiedosto...")
                         insertfile = browser.find_element("attachments[-1][uploaded_data]")
@@ -296,7 +296,7 @@ class WorkerThread(QThread):
         print(f"Kansion {self.kurssi} nimi muutettu")
             
         
-    def close_all_browsers(self):
+    def close_browsers(self):
         browser.close_all_browsers()
         
         
@@ -368,7 +368,7 @@ class window(QMainWindow):
         
         
     def close_application(self):
-        self.worker_thread.close_all_browsers()
+        self.worker_thread.close_browsers()
         self.close()
         
 
@@ -423,6 +423,7 @@ def main():
         w.show()
         sys.exit(app.exec_())
     finally:
+        app.quit()       
         browser.close_all_browsers()
     
 if __name__ == "__main__":
