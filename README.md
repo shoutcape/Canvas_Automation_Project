@@ -2,7 +2,7 @@
 
 This project was made as a part of Laurea's rpa course. It allows you to return multiple assignments with ease and automatically once you run the program.
 
-The program automatically goes through available courses and assignments and then creates corresponding directories for each course and assignments to the desktop.
+The program automatically goes through available courses and assignments and then creates corresponding directories for each course and assignments to the desktop. After this you can add your assignment submission to the assignment folders which will be automatically submitted to the canvas platform when you run the program again. The program will ask for permission before submitting the assignment.
  
 
 
