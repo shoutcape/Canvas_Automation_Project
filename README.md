@@ -8,7 +8,6 @@ The program automatically goes through available courses and assignments and the
 
 
 
-If the webdownload fails try a different browser.
 
 
 
