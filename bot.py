@@ -94,7 +94,8 @@ class WorkerThread(QThread):
         except:
             print("Tehtävän palautus epäonnistui. Muistithan luoda tunnukset?")
             browser.close_all_browsers()
-            
+        
+        browser.close_all_browsers()
         self.finished.emit()
         
     
