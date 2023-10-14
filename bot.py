@@ -50,11 +50,11 @@ def resource_path(relative_path):
     return os.path.join(base_path, relative_path)
 
 # Use the function to get the path to your file
-ui_path = resource_path("contents/window.ui")
-popupui_path = resource_path("contents/signinpopup.ui")
-circle_logo_path = resource_path("contents/canvascircle_g0O_icon.ico")
-canvas_project_path = resource_path("contents/canvasproject_small.png")
-vault_path = resource_path("contents/vault.json")
+ui_path = resource_path("contents\\window.ui")
+popupui_path = resource_path("contents\\signinpopup.ui")
+circle_logo_path = resource_path("contents\\canvascircle_g0O_icon.ico")
+canvas_project_path = resource_path("contents\\canvasproject_small.png")
+vault_path = resource_path("contents\\vault.json")
 
 
 
@@ -278,13 +278,18 @@ class WorkerThread(QThread):
     def confirm_submission(self, tiedostonimi):
         print(f"Lähetetäänkö tiedosto {tiedostonimi}")
         submit_button = browser.find_element("id:submit_file_button")
+        try:
+            turnitin_checkbox = browser.find_element("css:#submit_online_upload_form > table > tbody > tr:nth-child(5) > td > label > input")
+            browser.click_element(turnitin_checkbox)
+            print("Turnitin hyväksytty")
+        except:
+            pass
         window.mutex.lock()
         window.condition.wait(window.mutex)
         window.mutex.unlock()
-
 #Aktivoi tämä osa kun haluat palauttaa tehtävän
         browser.click_element(submit_button)
-        time.sleep(2)
+        time.sleep(3)
         print("Tehtävä palautettu")
         
         os.rename(os.path.join(palautukset, self.kurssi, self.tehtava), os.path.join(palautukset, self.kurssi, "Palautettu " + self.tehtava))
@@ -293,8 +298,6 @@ class WorkerThread(QThread):
         
     def close_all_browsers(self):
         browser.close_all_browsers()
-        
-    
         
         
         
