@@ -25,5 +25,7 @@ Doesn't return assignments
 [Install here](https://github.com/shoutcape/Canvas_Automation_Project/releases/tag/v1.0)
 
 
-[![canvasproject small](https://github.com/shoutcape/Canvas_Automation_Project/assets/74509593/c62bcef6-ca66-4ddd-9cae-01d7c4f71b10)](https://youtu.be/vPb5qMqwoD4)
+![canvasproject small](https://github.com/shoutcape/Canvas_Automation_Project/assets/74509593/c62bcef6-ca66-4ddd-9cae-01d7c4f71b10)
+
+Video: https://youtu.be/vPb5qMqwoD4
 
