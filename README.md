@@ -15,14 +15,9 @@ The program automatically goes through available courses and assignments and the
 
 Returns assignments
 
-[Install here ![GitHub release (latest by date)](https://img.shields.io/github/v/release/Shoutcape/Canvas_Automation_Project?label=latest%20release) ](https://github.com/shoutcape/Canvas_Automation_Project/releases/tag/v1.1)
+[Install here ![GitHub release (latest by date)](https://img.shields.io/github/v/release/Shoutcape/Canvas_Automation_Project?label=latest%20release) ](https://github.com/shoutcape/Canvas_Automation_Project/releases/tag/V.1.0)
 
 
-### DEMO version
-
-Doesn't return assignments
-
-[Install here](https://github.com/shoutcape/Canvas_Automation_Project/releases/tag/V.1.0)
 
 
 ![canvasproject small](https://github.com/shoutcape/Canvas_Automation_Project/assets/74509593/c62bcef6-ca66-4ddd-9cae-01d7c4f71b10)
