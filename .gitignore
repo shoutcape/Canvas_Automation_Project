@@ -1,5 +1,6 @@
-virtualenv/
-.vscode/
-dist/bot
-build/
-devdata/
+virtualenv/*
+.vscode/*
+dist/bot*
+build/*
+devdata/*
+output/*
