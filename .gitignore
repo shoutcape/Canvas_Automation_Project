@@ -1,0 +1,4 @@
+virtualenv/
+.vscode/
+dist/bot
+build/

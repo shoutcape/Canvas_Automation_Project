@@ -19,7 +19,9 @@ from cryptography.fernet import Fernet
 
 import base64
 
-key = Fernet.generate_key()
+key = "-_4BQgzg1Z3eWipRRo0tpj4KuXWmqNJ7qSyNNYuhHVc="
+
+
 cipher = Fernet(key)
 
 browser = Selenium()
@@ -35,7 +37,7 @@ url = "https://tunnistus.laurea.fi/adfs/ls/?SAMLRequest=fZLNbsIwEITvfYrI95AQgiAW
 
 
 
-
+#https://stackoverflow.com/questions/7674790/bundling-data-files-with-pyinstaller-onefile
 def resource_path(relative_path):
     """Get the absolute path for a resource in a PyInstaller-packaged application."""
     if getattr(sys, 'frozen', False):
@@ -48,11 +50,11 @@ def resource_path(relative_path):
     return os.path.join(base_path, relative_path)
 
 # Use the function to get the path to your file
-ui_path = resource_path("contents/window.ui")
-popupui_path = resource_path("contents/signinpopup.ui")
-circle_logo_path = resource_path("contents/canvascircle_g0O_icon.ico")
-canvas_project_path = resource_path("contents/canvasproject_small.png")
-vault_path = resource_path("contents/vault.json")
+ui_path = resource_path("contents\\window.ui")
+popupui_path = resource_path("contents\\signinpopup.ui")
+circle_logo_path = resource_path("contents\\canvascircle_g0O_icon.ico")
+canvas_project_path = resource_path("contents\\canvasproject_small.png")
+vault_path = resource_path("contents\\vault.json")
 
 
 
@@ -60,7 +62,7 @@ vault_path = resource_path("contents/vault.json")
 
 class WorkerThread(QThread):
     finished = pyqtSignal()
-    signal = pyqtSignal()
+    pause_signal = pyqtSignal()
     def __init__(self):
         super().__init__()
         
@@ -75,7 +77,7 @@ class WorkerThread(QThread):
         try:
             os.startfile(palautukset)
         except: 
-            print("Kansiota ei löydy")
+            print("Kansiota ei löydy, luo kansio")
 
  
     def run(self):
@@ -91,9 +93,10 @@ class WorkerThread(QThread):
             
         except:
             print("Tehtävän palautus epäonnistui. Muistithan luoda tunnukset?")
-        finally:
-            self.close_all_browsers()
-            self.finished.emit()
+            browser.close_all_browsers()
+        
+        browser.close_all_browsers()
+        self.finished.emit()
         
     
     def open_site(self):
@@ -128,7 +131,6 @@ class WorkerThread(QThread):
 
         decoded_encrypted_username = base64.b64decode(username.encode())
         decrypted_username = cipher.decrypt(decoded_encrypted_username).decode()
-
         browser.input_text("id:userNameInput", decrypted_username)
         browser.input_text("id:passwordInput", decrypted_password)
         browser.submit_form()
@@ -237,11 +239,12 @@ class WorkerThread(QThread):
                     
                     assignment_information = browser.get_webelements("css:#assignment_show > ul")
                     for info in assignment_information:
-                        info = info.text.splitlines()
+                        info = info.text.lower().splitlines()
                     
+                    filetypes =  ['doc', 'docx', 'pdf','doc,', 'docx,', 'pdf,', 'ppt,', 'pptx']
                     info = info[0].split(" ")
-                    #TODO: Tarkista onko tiedostotyyppi rajattu, jos on, voi suoraan lisätä tiedoston sivulle.
-                    if "pdf" in info or "docx" in info:
+                    #Tarkista onko tiedostotyyppi rajattu, jos on, voi suoraan lisätä tiedoston sivulle.
+                    if any(filetype in info for filetype in filetypes):
                         #valitse tiedosto
                         print("Valitaan tiedosto...")
                         insertfile = browser.find_element("attachments[-1][uploaded_data]")
@@ -264,9 +267,8 @@ class WorkerThread(QThread):
                         print(f"Tiedoston {self.tiedostonimi} sijoitus ok")
                     
                     #TEHTÄVÄN PALAUTUS
-                    self.signal.emit()
+                    self.pause_signal.emit()
                     self.confirm_submission(self.tiedostonimi)
-                    time.sleep(2)
                     
         if palautetut == 0:
             print("Ei palautettavia tehtäviä")
@@ -277,22 +279,26 @@ class WorkerThread(QThread):
     def confirm_submission(self, tiedostonimi):
         print(f"Lähetetäänkö tiedosto {tiedostonimi}")
         submit_button = browser.find_element("id:submit_file_button")
+        try:
+            turnitin_checkbox = browser.find_element("css:#submit_online_upload_form > table > tbody > tr:nth-child(5) > td > label > input")
+            browser.click_element(turnitin_checkbox)
+            print("Turnitin hyväksytty")
+        except:
+            pass
         window.mutex.lock()
         window.condition.wait(window.mutex)
         window.mutex.unlock()
-        #print the return button element for testing purposes
+#Aktivoi tämä osa kun haluat palauttaa tehtävän
+        browser.click_element(submit_button)
+        time.sleep(3)
         print("Tehtävä palautettu")
         
         os.rename(os.path.join(palautukset, self.kurssi, self.tehtava), os.path.join(palautukset, self.kurssi, "Palautettu " + self.tehtava))
         print(f"Kansion {self.kurssi} nimi muutettu")
-        #activate this line of code to actually submit assignments
-        #browser.click_element(submit_button)
             
         
-    def close_all_browsers(self):
+    def close_browsers(self):
         browser.close_all_browsers()
-        
-    
         
         
         
@@ -328,7 +334,7 @@ class window(QMainWindow):
         self.create_folder_button.clicked.connect(self.worker_thread.create_folder)
         
         self.worker_thread.finished.connect(self.work_finished)
-        self.worker_thread.signal.connect(self.activate_send_button)
+        self.worker_thread.pause_signal.connect(self.activate_send_button)
         
         
         #Tällä saadaan tekstikenttä tulostamaan sys.stdout aka print
@@ -355,8 +361,6 @@ class window(QMainWindow):
         self.start_button.setText("Käynnissä")
         self.worker_thread.start()
         
-    def confirm_submission(self):
-        self.confirm_submission.emit("kyllä")
             
         
     def work_finished(self):
@@ -365,7 +369,7 @@ class window(QMainWindow):
         
         
     def close_application(self):
-        self.worker_thread.close_all_browsers()
+        self.worker_thread.close_browsers()
         self.close()
         
 
@@ -378,8 +382,9 @@ class CustomStream(QObject):
     def write(self, text):
         self.append_text.emit(text)
 
+
+#Tämä luokka vaatii että myös flush metodi on olemassa
     def flush(self):
-       # Tämä on tarpeen, jotta CustomStream noudattaa sys.stdout -liittymää
        pass
 
 class popupwindow(QMainWindow):
@@ -419,14 +424,8 @@ def main():
         w.show()
         sys.exit(app.exec_())
     finally:
+        app.quit()       
         browser.close_all_browsers()
     
 if __name__ == "__main__":
     main()
-    
-    
-    #TODO:
-    # DONE 1. Tarkista onko tiedosto jo palautettu 
-    # DONE 2. Palautettavan tiedoston eri tiedostotyypit saattavat
-    # vaikuttaa valitse tiedosto napin saatavuuteen siksi olisi hyvä
-    # lisätä tarkistus jotta voidaan toimia tiedostotyypin mukaan.
